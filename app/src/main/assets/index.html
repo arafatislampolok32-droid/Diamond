@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Diamond Earn (BDT Economy)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Config for Theme customization -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#020617',
+              card: '#0f172a',
+              border: '#1e293b',
+              accent: '#06b6d4',
+              diamond: '#22d3ee',
+              gold: '#f59e0b',
+              success: '#10b981',
+              danger: '#ef4444'
+            }
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Material Symbols Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <style>
+    /* Premium visual styling and micro-interaction animations */
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #020617;
+      color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+    
+    .glass-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    }
+    
+    .glow-diamond {
+      filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.4));
+    }
+
+    .glow-gold {
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+    }
+
+    .shimmer {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite linear;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -120% 0; }
+      100% { background-position: 120% 0; }
+    }
+
+    /* Custom thin scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 99px;
+    }
+
+    .pulse-rate {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .85; transform: scale(0.98); }
+    }
+  </style>
+</head>
+<body class="flex justify-center min-h-screen">
+
+  <!-- Main Container -->
+  <div class="w-full max-w-[500px] bg-brand-dark min-h-screen flex flex-col pb-12 relative border-x border-slate-800">
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-[420px] px-4 pointer-events-none flex flex-col gap-2"></div>
+
+    <!-- Header Section -->
+    <header class="p-4 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-brand-diamond flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/25">
+            D
+          </div>
+          <span class="absolute bottom-0 right-0 w-3 h-3 bg-brand-success border-2 border-brand-dark rounded-full"></span>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-white tracking-wide">Diamond Earn</h1>
+          <p class="text-[10px] text-cyan-400 flex items-center gap-1 font-semibold uppercase tracking-wider">
+            <span class="pulse-rate inline-block w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            BDT Economy v1.0
+          </p>
+        </div>
+      </div>
+      
+      <!-- Info Button -->
+      <button onclick="openInfoModal()" class="px-3 py-1.5 bg-slate-800 rounded-lg border border-slate-700 text-xs font-semibold text-slate-300 hover:bg-slate-750 transition-all flex items-center gap-1 active:bg-slate-700 cursor-pointer" title="নিয়মাবলী ও ক্যালকুলেটর">
+        <span class="material-symbols-rounded text-[14px]">help_outline</span>
+        <span>নিয়মাবলী</span>
+      </button>
+    </header>
+
+    <!-- Main Scrollable Area -->
+    <main class="flex-1 p-4 flex flex-col gap-4">
+      
+      <!-- Wallet Dashboard (BDT & Diamonds) -->
+      <div class="grid grid-cols-2 gap-3">
+        
+        <!-- Diamond Balance -->
+        <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl shadow-sm flex flex-col items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 shimmer pointer-events-none"></div>
+          <span class="text-[10px] uppercase text-slate-400 font-bold tracking-wider mb-1 text-center">আপনার ডায়মন্ড</span>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-rounded text-cyan-400 glow-diamond text-[22px] fill-[1]">diamond</span>
+            <span id="diamond-val" class="text-xl font-black text-white font-mono leading-none">100</span>
+          </div>
+          <span class="text-[8px] text-cyan-400 bg-cyan-950/40 border border-cyan-800/30 px-1.5 py-0.5 rounded-full mt-1.5 font-bold">১ম লগইন বোনাস +১০০</span>
+        </div>
+        
+        <!-- BDT Fund (Withdraw Balance) -->
+        <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl shadow-sm flex flex-col items-center justify-center relative overflow-hidden">
+          <span class="text-[10px] uppercase text-slate-400 font-bold tracking-wider mb-1 text-center">উইথড্র ফান্ড</span>
+          <div class="flex items-center gap-1 text-emerald-400">
+            <span class="text-lg font-black leading-none">৳</span>
+            <span id="bdt-val" class="text-xl font-black font-mono leading-none">0.00</span>
+          </div>
+          <span id="withdraw-info-badge" class="text-[8px] text-brand-danger bg-brand-danger/10 px-1.5 py-0.5 rounded-full mt-1.5 font-bold flex items-center gap-0.5 border border-brand-danger/20">
+            <span class="material-symbols-rounded text-[9px]">lock</span>উইথড্রল লকড্
+          </span>
+        </div>
+        
+      </div>
+
+      <!-- Live Income Generator HUD -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-5 rounded-3xl relative overflow-hidden">
+        <!-- Interactive Gradient Backlight glow -->
+        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-500/10 blur-3xl rounded-full"></div>
+        <div class="absolute -top-10 -left-10 w-24 h-24 bg-emerald-500/5 blur-3xl rounded-full"></div>
+
+        <div class="relative z-10">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-[11px] text-cyan-400 font-bold uppercase tracking-wider">Current Mining Rate</span>
+            <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold bg-emerald-950/50 border border-emerald-900/30 px-2 py-0.5 rounded-full">
+              <span class="animate-ping w-1 h-1 bg-emerald-400 rounded-full"></span>
+              লাইভ মাইনিং
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-400 font-medium mb-1">সঞ্চিত রিয়েল-টাইম আয় (৳)</div>
+          <div class="font-mono text-2xl font-black tracking-tight text-white mb-4 break-all" id="unclaimed-bdt">
+            ৳ ০.০০০০০০০০
+          </div>
+
+          <!-- Earning stats Grid -->
+          <div class="grid grid-cols-2 gap-3 mb-4 bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-300">
+            <div>
+              <span class="block text-slate-500 font-normal">আয়ের রেট (প্রতি ঘণ্টা):</span>
+              <span class="font-bold text-cyan-400 font-mono" id="hourly-rate-text">৳ ০.০০০০০০০০</span>
+            </div>
+            <div>
+              <span class="block text-slate-500 font-normal">আয়ের ভিত্তি:</span>
+              <span class="font-bold text-slate-200">১০০০ 💎 = ০.০০০০০০০১ ৳</span>
+            </div>
+          </div>
+
+          <!-- Claim Button -->
+          <button id="claim-btn" onclick="claimEarnings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-3.5 px-4 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/50 active:scale-[0.98] cursor-pointer">
+            <span class="material-symbols-rounded text-sm">currency_lira</span>
+            সঞ্চয় উইথড্র ফান্ডে নিন (Claim BDT)
+          </button>
+        </div>
+      </div>
+
+      <!-- Watch AD Section -->
+      <div class="bg-slate-900/40 border border-dashed border-slate-700 p-5 rounded-3xl relative overflow-hidden flex flex-col items-center">
+        <div class="flex items-center justify-between mb-3 w-full">
+          <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+            <span class="material-symbols-rounded text-cyan-400 text-[18px]">smart_display</span>
+            Ad Reward Status:
+          </h2>
+          <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[10px] rounded-full font-bold" id="daily-ads-remaining">বাকি অ্যাড: ১০০/১০০</span>
+        </div>
+
+        <!-- Banner design showing ads logic -->
+        <div class="bg-slate-950/60 p-3.5 rounded-2xl mb-4 border border-slate-800 text-xs w-full">
+          <ul class="space-y-1.5 text-slate-300">
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-rounded text-[14px] text-cyan-400 mt-0.5">check_circle</span>
+              <span>প্রতিটি অ্যাড ১৫ সেকেন্ড দেখলে <span class="text-cyan-400 font-bold">১০০টি ডায়মন্ড</span> পাওয়া যায়।</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-rounded text-[14px] text-cyan-400 mt-0.5">check_circle</span>
+              <span>প্রতি ১০টি অ্যাড সমাপ্তিতে <span class="text-emerald-400 font-semibold">১.০০ ৳ বোনাস</span> উইথড্র ফান্ডে যোগ হবে!</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Progress Counter for BDT Bonus -->
+        <div class="mb-4 w-full">
+          <div class="flex justify-between text-[11px] mb-1.5">
+            <span class="text-slate-400">১০টি অ্যাড বোনাস প্রোগ্রেস:</span>
+            <span class="font-bold text-emerald-400" id="bonus-progress-text">০/১০ অ্যাড</span>
+          </div>
+          <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+            <div id="bonus-progress-bar" class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Watch Ad Call-to-action Button -->
+        <div class="relative w-full">
+          <button id="view-ad-btn" onclick="startWatchingAd()" class="w-full flex items-center justify-between px-4 py-3 bg-slate-800 border border-slate-750 rounded-2xl hover:bg-slate-750 active:bg-slate-700 transition-all group cursor-pointer text-left shadow-sm">
+            <div class="flex flex-col items-start">
+              <span class="text-white font-bold text-xs group-active:text-cyan-400 flex items-center gap-1.5">
+                ১০০ ডায়মন্ড পেতে অ্যাড দেখুন
+              </span>
+              <span class="text-[10px] text-slate-500 font-medium">প্রতি ১০টি অ্যাডে ১ ৳ বোনাস</span>
+            </div>
+            <div class="w-7 h-7 rounded-full bg-slate-700 group-hover:bg-slate-600 flex items-center justify-center transition-all">
+              <span class="text-[10px] text-white">▶</span>
+            </div>
+          </button>
+          
+          <!-- Ad Watch Countdown Container Overlay -->
+          <div id="ad-cooldown-overlay" class="absolute inset-0 bg-[#020617]/95 rounded-2xl border border-dashed border-slate-700 hidden items-center justify-between px-4 z-10">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-rounded text-cyan-400 animate-spin text-[18px]">sync</span>
+              <span id="cooldown-text" class="text-[11px] text-slate-400 font-medium">পরবর্তী অ্যাড দেখতে পারবেন: ৬০ সেকেন্ড</span>
+            </div>
+            <div class="bg-slate-800 px-2 py-0.5 rounded font-mono text-[10px] font-bold text-cyan-400" id="cooldown-timer">60s</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marketplace (BUY & SELL Diamonds) -->
+      <div class="space-y-3">
+        <div class="flex justify-between items-end px-1.5 mb-1">
+          <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+            <span class="material-symbols-rounded text-cyan-400 text-[18px]">storefront</span>
+            মার্কেটপ্লেস (Marketplace)
+          </h2>
+          <span class="text-[10px] text-cyan-400 font-bold bg-cyan-950/20 px-2 py-0.5 rounded-full border border-cyan-800/20">লিমিট ছাড়া লেনদেন →</span>
+        </div>
+
+        <!-- 2x3 Grid of Packages -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="marketplace-grid">
+          <!-- Marketplace items dynamically set via script -->
+        </div>
+      </div>
+
+      <!-- Referral Network Simulation -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 relative overflow-hidden">
+        <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+          <span class="material-symbols-rounded text-cyan-400 text-[18px]">group</span>
+          রেফারেল নেটওয়ার্ক (Referral Network)
+        </h2>
+
+        <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 mb-4 text-center">
+          <div class="flex justify-center items-center gap-3">
+            <div class="bg-slate-900 px-4 py-2 rounded-lg text-center min-w-[90px] border border-slate-800/80">
+              <span class="block text-[10px] text-slate-400">আপনার রেফার</span>
+              <span id="ref-count-val" class="font-bold font-mono text-xl text-cyan-400">০ জন</span>
+            </div>
+            
+            <span class="material-symbols-rounded text-slate-600 text-3xl">arrow_forward</span>
+            
+            <div id="ref-status-badge" class="bg-brand-danger/10 border border-brand-danger/20 text-brand-danger px-3 py-2 rounded-lg text-xs font-bold min-w-[120px] flex flex-col justify-center items-center gap-0.5">
+              <span class="material-symbols-rounded text-[16px]">lock_clock</span>
+              <span>ন্যূনতম ৫ জন রেফার লাগবে</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Panel for Referrals -->
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="simulateReferralInvite()" class="bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-600 text-slate-200 text-xs py-2.5 px-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-sm">
+            <span class="material-symbols-rounded text-[16px] text-emerald-400">person_add</span>
+            রেফার ডেমো যোগ করুন
+          </button>
+          
+          <button onclick="resetReferrals()" class="bg-slate-800/50 hover:bg-slate-800 border border-slate-750 hover:border-brand-danger/30 text-slate-300 text-xs py-2.5 px-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+            <span class="material-symbols-rounded text-[16px] text-brand-danger">restart_alt</span>
+            রেফার রিসেট করুন
+          </button>
+        </div>
+      </div>
+
+      <!-- Withdraw Center -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 relative overflow-hidden">
+        <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+          <span class="material-symbols-rounded text-cyan-400 text-[18px]">payments</span>
+          উইথড্র রিকোয়েস্ট সেন্টার (Withdrawals)
+        </h2>
+        
+        <div class="flex justify-between items-center bg-slate-950/60 p-3.5 rounded-xl mb-4 border border-slate-800">
+          <div>
+            <span class="block text-[10px] text-slate-400">উত্তোলনযোগ্য অবশিষ্ট ফান্ড:</span>
+            <span class="text-xl font-bold text-white font-mono" id="withdraw-available-bdt">৳ ০.০০</span>
+          </div>
+          <span class="text-[10px] text-cyan-400 bg-cyan-950/40 border border-cyan-800/30 px-2.5 py-1 rounded font-bold">মিনিমাম ৫০৳</span>
+        </div>
+
+        <button onclick="openWithdrawModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-3.5 px-4 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/50 active:scale-[0.98] cursor-pointer">
+          <span class="material-symbols-rounded text-[16px]">outbox</span>
+          ৳ সরাসরি টাকা উত্তোলন করুন
+        </button>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-[11px] text-slate-500 mt-auto border-t border-slate-800">
+      <p class="font-semibold text-slate-400">© 2026 Diamond Earn. All Rights Reserved.</p>
+      <p class="mt-1 text-slate-500 font-mono">Telegram Mini App Client. Local Cache Sandbox.</p>
+    </footer>
+
+    <!-- INSTRUCTIONS AND INTERACTIVE CALCULATOR MODAL -->
+    <div id="info-modal" class="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-all duration-300">
+      <div class="glass-card w-full max-w-[460px] rounded-2xl border border-slate-805/80 overflow-hidden flex flex-col max-h-[85vh] scale-95 transition-all duration-300" id="info-modal-content">
+        <!-- Modal Header -->
+        <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
+          <h3 class="text-xs font-black uppercase tracking-widest text-[#f1f5f9] flex items-center gap-1.5">
+            <span class="material-symbols-rounded text-cyan-400 icon-scale text-[18px]">info</span>
+            কিভাবে কাজ করে? (Rules)
+          </h3>
+          <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer">
+            <span class="material-symbols-rounded text-[18px]">close</span>
+          </button>
+        </div>
+        
+        <!-- Modal content (scrollable) -->
+        <div class="p-5 overflow-y-auto space-y-4 text-xs text-slate-300">
+          <!-- Core Rules explanation with bangla details -->
+          <div class="space-y-2">
+            <h4 class="font-bold text-white text-xs border-l-2 border-cyan-400 pl-2">💎 আয়ের মূল নিয়মাবলি:</h4>
+            <div class="space-y-1.5 pl-3 text-slate-300 leading-relaxed font-normal">
+              <p>১. <span class="text-white font-semibold">১ম লগইন বোনাস:</span> প্রতিটি নতুন অ্যাকাউন্ট অবিলম্বে ফ্রী <span class="text-cyan-400 font-semibold">১০০টি ডায়মন্ড</span> লাভ করে।</p>
+              <p>২. <span class="text-white font-semibold">লাইভ নিষ্ক্রিয় আয় (Mining):</span> প্রতি ঘন্টায় <span class="text-cyan-400 font-semibold">১০,০০,০০০ ডায়মন্ড</span> থাকলে আপনার ওয়ালেটে লাইভ <span class="text-emerald-400 font-semibold">০.০০০০০০০১ BDT</span> মাইনিং হতে থাকবে। ডায়মন্ড যত বেশি, আপনার প্রতি সেকেন্ডের মাইনিং হার তত স্পিডে বাড়বে!</p>
+              <p>৩. <span class="text-white font-semibold">BDT Claim:</span> আয়ের টাকা রিয়েল টাইমে জমা হয়। "Claim" বাটনে ক্লিক করলে তা সরাসরি "উইথড্র ফান্ড" ব্যালেন্সে স্থানান্তরিত হবে।</p>
+              <p>৪. <span class="text-white font-semibold">উইথড্রাল শর্ত:</span> ৫ জন ডেমো রেফার সম্পন্ন করতে হবে (আমাদের রেফার যোগ বাটনে ক্লিক করিয়ে পরীক্ষা করতে পারেন)।</p>
+            </div>
+          </div>
+
+          <!-- Watch Ads detailed guides -->
+          <div class="space-y-2">
+            <h4 class="font-bold text-white text-xs border-l-2 border-cyan-500 pl-2">📺 অ্যাড এবং ১ ৳ বোনাস সিস্টেম:</h4>
+            <div class="space-y-1.5 pl-3 leading-relaxed">
+              <p>• একটি অ্যাড দেখলে ১৫ সেকেন্ডের গণনা চলে। শেষ হলে ১০০ ডায়মন্ড ক্রেডিট করা হয়।</p>
+              <p>• অ্যাড সমাপ্তির পর ৬০ সেকেন্ডের একটি কুলডাউন কাউন্টডাউন শুরু হয়। এই সময় আরেকটি অ্যাড দেখা যাবে না।</p>
+              <p>• প্রতিদিন সর্বোচ্চ ১০০টি অ্যাড দেখা সম্ভব। প্রতি ১০টি সফল অ্যাড দেখলেই ১.০০ ৳ ডবল বোনাস সরাসরি "উইথড্র ফান্ডে" চলে যায়।</p>
+            </div>
+          </div>
+
+          <!-- Live Income Calculator Widget inside Modal -->
+          <div class="bg-slate-950/65 p-4 rounded-xl border border-slate-800 space-y-3">
+            <h4 class="font-bold text-white text-xs flex items-center gap-1">
+              <span class="material-symbols-rounded text-cyan-400 text-[16px]">calculate</span>
+              রিয়েল-টাইম আয় ক্যালকুলেটর (BDT)
+            </h4>
+            
+            <div class="space-y-2.5">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">ডায়মন্ড পরিমাণ টাইপ করুন:</label>
+                <div class="relative">
+                  <input type="number" id="calc-diamond-input" oninput="calculateSimulatorResult(this.value)" value="10000" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 font-mono text-white text-sm focus:outline-none focus:border-cyan-500 text-left">
+                  <span class="absolute right-2 top-2 text-[10px] text-cyan-400 font-bold font-mono">💎 DIAMONDS</span>
+                </div>
+              </div>
+
+              <!-- Calculation Result Dashboard -->
+              <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
+                <div class="bg-slate-900 p-2 rounded border border-slate-800/80">
+                  <span class="block text-slate-500 mb-0.5">প্রতি ঘন্টা</span>
+                  <span id="calc-hourly-res" class="font-semibold text-cyan-400">৳ ০.০০</span>
+                </div>
+                <div class="bg-slate-900 p-2 rounded border border-slate-800/80">
+                  <span class="block text-slate-500 mb-0.5">প্রতি দিন</span>
+                  <span id="calc-daily-res" class="font-semibold text-emerald-400">৳ ০.০০</span>
+                </div>
+                <div class="bg-slate-900 p-2 rounded border border-slate-800/80">
+                  <span class="block text-slate-500 mb-0.5">প্রতি মাস</span>
+                  <span id="calc-monthly-res" class="font-semibold text-brand-gold">৳ ০.০০</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WITHDRAWAL ACTION MODAL -->
+    <div id="withdraw-modal" class="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-all duration-300">
+      <div class="glass-card w-full max-w-[420px] rounded-2xl border border-slate-800/80 overflow-hidden flex flex-col scale-95 transition-all duration-300" id="withdraw-modal-content">
+        <!-- Modal Header -->
+        <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
+          <h3 class="text-xs font-black uppercase tracking-widest text-[#f1f5f9] flex items-center gap-1.5">
+            <span class="material-symbols-rounded text-cyan-400 icon-scale text-[18px]">payments</span>
+            টাকা উত্তোলন ফরম (Withdrawal)
+          </h3>
+          <button onclick="closeWithdrawModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer">
+            <span class="material-symbols-rounded text-[18px]">close</span>
+          </button>
+        </div>
+
+        <div class="p-5 space-y-4">
+          <!-- Balance Summary Banner -->
+          <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+            <span class="text-slate-400 font-medium">মোট ব্যালেন্স:</span>
+            <span id="modal-withdraw-balance-display" class="font-black text-emerald-400 text-sm font-mono">৳ ০.০০</span>
+          </div>
+
+          <!-- Method Selection -->
+          <div class="space-y-1.5">
+            <label class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">পেমেন্ট মেথড সিলেক্ট করুন:</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="selectWithdrawMethod('bkash', this)" class="payment-method-btn bg-slate-950/60 border border-slate-800 hover:border-pink-500 rounded-xl p-2.5 flex flex-col items-center justify-center gap-1 transition-all cursor-pointer">
+                <span class="w-8 h-8 rounded-full bg-pink-600/20 text-[10px] text-pink-500 flex items-center justify-center font-bold">bKash</span>
+                <span class="text-[10px] font-semibold text-slate-300">বিকাশ</span>
+              </button>
+              
+              <button onclick="selectWithdrawMethod('nagad', this)" class="payment-method-btn bg-slate-950/60 border border-slate-800 hover:border-orange-500 rounded-xl p-2.5 flex flex-col items-center justify-center gap-1 transition-all cursor-pointer">
+                <span class="w-8 h-8 rounded-full bg-orange-600/20 text-[10px] text-orange-500 flex items-center justify-center font-bold">Nagad</span>
+                <span class="text-[10px] font-semibold text-slate-300">নগদ</span>
+              </button>
+
+              <button onclick="selectWithdrawMethod('rocket', this)" class="payment-method-btn bg-slate-950/60 border border-slate-800 hover:border-purple-500 rounded-xl p-2.5 flex flex-col items-center justify-center gap-1 transition-all cursor-pointer">
+                <span class="w-8 h-8 rounded-full bg-purple-600/20 text-[10px] text-purple-500 flex items-center justify-center font-bold">Rocket</span>
+                <span class="text-[10px] font-semibold text-slate-300">রকেট</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Account number input -->
+          <div class="space-y-1">
+            <label class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">আপনার পার্সোনাল মোবাইল নাম্বার:</label>
+            <div class="relative">
+              <span class="absolute left-3 top-2.5 text-slate-500 font-mono text-xs">+৮৮</span>
+              <input type="number" id="withdraw-phone-input" placeholder="017XXXXXXXX" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 pl-11 font-mono text-white text-xs focus:outline-none focus:border-cyan-500 text-left">
+            </div>
+          </div>
+
+          <!-- Request Amount input -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px]">
+              <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">উত্তোলনের পরিমাণ লিখুন (৳):</label>
+              <button onclick="fillMaxWithdraw()" class="text-cyan-400 hover:underline font-bold text-[10px]">MAX (উইথড্র অল)</button>
+            </div>
+            <div class="relative">
+              <input type="number" id="withdraw-amount-input" placeholder="সর্বনিম্ন ৫০ ৳" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 font-mono text-white text-xs focus:outline-none focus:border-cyan-500 text-left">
+              <span class="absolute right-3 top-2.5 text-xs text-slate-500 font-bold font-mono">BDT (৳)</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button onclick="submitWithdrawForm()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-3 rounded-xl font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-950/40">
+            <span class="material-symbols-rounded text-[16px]">verified</span>
+            টাকা উত্তোলনের রিকোয়েস্ট পাঠান
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AD WATCH SIMULATION TIMER MODAL -->
+    <div id="ad-viewer-modal" class="fixed inset-0 z-50 bg-[#020617] flex items-center justify-center p-4 hidden">
+      <div class="w-full max-w-[400px] text-center space-y-6">
+        <!-- Ad Video Sim Screen -->
+        <div class="w-full aspect-video bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl flex flex-col justify-center items-center p-6 border border-slate-800 shadow-2xl relative overflow-hidden">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1),transparent_70%)]"></div>
+          
+          <span class="material-symbols-rounded animate-bounce text-6xl text-cyan-400 glow-diamond mb-3 fill-[1]">ad_group</span>
+          
+          <h4 class="text-xs font-black text-white tracking-widest uppercase mb-1">Sponsored Ad Simulation</h4>
+          <p class="text-[11px] text-slate-400">ডায়মন্ড মাইনিং রিওয়ার্ড প্রসেস করা হচ্ছে...</p>
+          
+          <!-- Visual progress pulse -->
+          <div class="w-32 h-1 bg-cyan-500/20 rounded-full mt-4 overflow-hidden relative">
+            <div class="absolute inset-y-0 left-0 bg-cyan-500 rounded-full animate-pulse w-full"></div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold text-white">অ্যাডটি সম্পূর্ণ দেখুন (অনুগ্রহ করে অপেক্ষা করুন)</h3>
+          <!-- Main timer bar -->
+          <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+            <div id="ad-timer-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-[0%] transition-all duration-100 ease-linear"></div>
+          </div>
+          <!-- Numeric timer representation -->
+          <p class="text-xs font-mono text-slate-400 font-semibold" id="ad-timer-number">১৫ সেকেন্ড বাকি</p>
+        </div>
+
+        <!-- Fake Close Alert Banner (Not allows closing early) -->
+        <p class="text-[10px] text-slate-500 font-medium mt-4">বিজ্ঞাপনটি বন্ধ করতে চাইলে রিওয়ার্ড বাতিল হয়ে যাবে।</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // CORE APP STATE CONFIG (Bengal LocalStorage)
+    const CORE_STATE = {
+      diamonds: 100,
+      bdtClaimed: 0.0,
+      unclaimedBdt: 0.0,
+      lastClaimTime: Date.now(),
+      referrals: 0,
+      adsWatchedToday: 0,
+      adsWatchedTotal: 0,
+      bonusCycleProgress: 0, // goes 0 to 10
+      lastAdWatchTime: 0,
+      lastAdResetDate: '', // Format 'YYYY-MM-DD'
+      
+      // Global counters simulated locally
+      globalBuys: {
+        '10k': 1420, '50k': 841, '100k': 412, '500k': 189, '1M': 94, '2M': 42
+      },
+      globalSells: {
+        '10k': 1182, '50k': 694, '100k': 329, '500k': 141, '1M': 73, '2M': 28
+      }
+    };
+
+    // Marketplace Package Settings
+    const MARKET_PACKAGES = [
+      { id: '10k', title: '10k Diamond', size: 10000, buy: 30, sell: 35 },
+      { id: '50k', title: '50k Diamond', size: 50000, buy: 160, sell: 180 },
+      { id: '100k', title: '100k Diamond', size: 100000, buy: 340, sell: 390 },
+      { id: '500k', title: '500k Diamond', size: 500000, buy: 1800, sell: 2050 },
+      { id: '1M', title: '1M Diamond', size: 1000000, buy: 3800, sell: 4300 },
+      { id: '2M', title: '2M Diamond', size: 2000000, buy: 8000, sell: 9000 }
+    ];
+
+    // Current local state references
+    let state = { ...CORE_STATE };
+    let adCooldownInterval = null;
+    let selectedWithdrawMethod = '';
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      initStorage();
+      renderMarketplace();
+      updateDashboardData();
+      checkAndRestoreCooldown();
+      
+      // Real-time ticking system (every 100ms for extra precision visual ticker)
+      setInterval(tickLiveMining, 100);
+
+      // Random global buy/sell increments to simulate active users in telegram
+      setInterval(simulateBackgroundActivity, 15000);
+    });
+
+    // Load elements from Local Storage
+    function initStorage() {
+      const storedData = localStorage.getItem('diamond_earn_state');
+      const todayString = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+      
+      if (storedData) {
+        try {
+          const parsed = JSON.parse(storedData);
+          state = { ...state, ...parsed };
+          
+          // Check daily resetting of watched ads count
+          if (state.lastAdResetDate !== todayString) {
+            state.adsWatchedToday = 0;
+            state.lastAdResetDate = todayString;
+            saveToStorage();
+          }
+        } catch (e) {
+          console.error("Storage corrupted. Custom re-initializing.", e);
+        }
+      } else {
+        // Safe first initialization
+        state.lastAdResetDate = todayString;
+        state.diamonds = 100; // 100 Welcome diamonds!
+        saveToStorage();
+        showToast("Diamond Earn এ প্রথম লগইন বোনাস ১০০ ডায়মন্ড যুক্ত হয়েছে!", "info");
+      }
+    }
+
+    // Save client state safely
+    function saveToStorage() {
+      localStorage.setItem('diamond_earn_state', JSON.stringify(state));
+    }
+
+    // Live background activities generator (simulating fake Telegram participants)
+    function simulateBackgroundActivity() {
+      const idx = Math.floor(Math.random() * MARKET_PACKAGES.length);
+      const pkg = MARKET_PACKAGES[idx];
+      const isBuyAction = Math.random() > 0.4; // 60% probability of buys
+      
+      if (isBuyAction) {
+        state.globalBuys[pkg.id] = (state.globalBuys[pkg.id] || 0) + Math.floor(Math.random() * 3) + 1;
+      } else {
+        state.globalSells[pkg.id] = (state.globalSells[pkg.id] || 0) + Math.floor(Math.random() * 2) + 1;
+      }
+      
+      saveToStorage();
+      renderMarketplace();
+    }
+
+    // Real-time ticking system calculates idle accumulated BDT based on current diamond counts
+    function tickLiveMining() {
+      const currentTime = Date.now();
+      const elapsedSeconds = (currentTime - state.lastClaimTime) / 1000;
+      
+      // 1000 diamonds = 0.00000001 BDT per hour
+      // Rate per diamond per hour: 0.00000001 / 1000 = 0.00000000001 BDT/hour
+      // Rate per hour for user absolute diamonds: state.diamonds * 0.00000000001
+      // Rate per second: (state.diamonds * 0.00000000001) / 3600
+      const bdtRatePerSecond = (state.diamonds * 0.00000001) / (1000 * 3600);
+      const freshlyAccumulated = bdtRatePerSecond * elapsedSeconds;
+
+      state.unclaimedBdt = freshlyAccumulated;
+      
+      // Update displays
+      const unclaimedEl = document.getElementById('unclaimed-bdt');
+      if (unclaimedEl) {
+        unclaimedEl.textContent = "৳ " + state.unclaimedBdt.toFixed(10);
+      }
+
+      const hourlyRate = state.diamonds * (0.00000001 / 1000);
+      const hourlyRateEl = document.getElementById('hourly-rate-text');
+      if (hourlyRateEl) {
+        hourlyRateEl.textContent = "৳ " + hourlyRate.toFixed(10);
+      }
+    }
+
+    // Format utility for numbers
+    function formatNumber(num) {
+      return num.toLocaleString('en-US');
+    }
+
+    // Main UI Updater
+    function updateDashboardData() {
+      document.getElementById('diamond-val').textContent = formatNumber(state.diamonds);
+      document.getElementById('bdt-val').textContent = state.bdtClaimed.toFixed(2);
+      document.getElementById('withdraw-available-bdt').textContent = "৳ " + state.bdtClaimed.toFixed(2);
+      
+      // Referral Displays
+      const refCountVal = document.getElementById('ref-count-val');
+      refCountVal.textContent = state.referrals + " জন";
+      
+      const badge = document.getElementById('ref-status-badge');
+      const withdrawInfoBadge = document.getElementById('withdraw-info-badge');
+      
+      if (state.referrals >= 5) {
+        badge.className = "bg-emerald-500/10 border border-emerald-500/20 text-brand-success px-3 py-2 rounded-lg text-xs font-bold min-w-[120px] flex flex-col justify-center items-center gap-0.5";
+        badge.innerHTML = `<span class="material-symbols-rounded text-[16px]">verified</span><span>উইথড্রল আনলকড্</span>`;
+        
+        withdrawInfoBadge.className = "text-[9px] text-brand-success bg-brand-success/10 px-2 py-0.5 rounded-full mt-1.5 font-semibold flex items-center gap-1";
+        withdrawInfoBadge.innerHTML = `<span class="material-symbols-rounded text-[10px]">lock_open</span>উইথড্রল আনলকড্`;
+      } else {
+        badge.className = "bg-brand-danger/10 border border-brand-danger/20 text-brand-danger px-3 py-2 rounded-lg text-xs font-bold min-w-[120px] flex flex-col justify-center items-center gap-0.5";
+        badge.innerHTML = `<span class="material-symbols-rounded text-[16px]">lock_clock</span><span>ন্যূনতম ৫ জন রেফার লাগবে</span>`;
+        
+        withdrawInfoBadge.className = "text-[9px] text-brand-danger bg-brand-danger/10 px-2 py-0.5 rounded-full mt-1.5 font-semibold flex items-center gap-1";
+        withdrawInfoBadge.innerHTML = `<span class="material-symbols-rounded text-[10px]">lock</span>উইথড্রল লকড্`;
+      }
+
+      // Ad Counter
+      document.getElementById('daily-ads-remaining').textContent = `বাকি অ্যাড: ${100 - state.adsWatchedToday}/১০০`;
+      
+      // Milestone Bonus displays
+      document.getElementById('bonus-progress-text').textContent = `${state.bonusCycleProgress}/১০ অ্যাড`;
+      const progressPercent = (state.bonusCycleProgress / 10) * 100;
+      document.getElementById('bonus-progress-bar').style.width = `${progressPercent}%`;
+    }
+
+    // Claim accumulated earnings
+    function claimEarnings() {
+      // Calculate final exact accumulated to transfer
+      const currentTime = Date.now();
+      const elapsedSeconds = (currentTime - state.lastClaimTime) / 1000;
+      const bdtRatePerSecond = (state.diamonds * 0.00000001) / (1000 * 3600);
+      const freshlyAccumulated = bdtRatePerSecond * elapsedSeconds;
+
+      if (freshlyAccumulated <= 0.0000000001) {
+        showToast("উইথড্র ফান্ডে দাবি করার মতো পর্যাপ্ত আয় এখনো জমেনি!", "danger");
+        return;
+      }
+
+      state.bdtClaimed += freshlyAccumulated;
+      state.lastClaimTime = currentTime;
+      state.unclaimedBdt = 0;
+      
+      saveToStorage();
+      updateDashboardData();
+      
+      showToast(`সফলভাবে ৳ ${freshlyAccumulated.toFixed(8)} উইথড্র ফান্ডে স্থানান্তর করা হয়েছে!`, "success");
+    }
+
+    // Render Marketplace Package list Dynamic
+    function renderMarketplace() {
+      const parent = document.getElementById('marketplace-grid');
+      parent.innerHTML = '';
+
+      MARKET_PACKAGES.forEach(pkg => {
+        const itemCard = document.createElement('div');
+        itemCard.className = "bg-slate-900 border border-slate-800 p-3 rounded-2xl flex flex-col justify-between relative shadow-sm hover:border-slate-700 transition-all";
+        
+        itemCard.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-1.5">
+              <div class="text-xs font-bold text-white flex items-center gap-1">
+                <span class="material-symbols-rounded text-cyan-400 text-[15px] fill-[1]">diamond</span>
+                ${pkg.title}
+              </div>
+              <span class="text-[8px] text-cyan-400 font-mono bg-cyan-950/40 border border-cyan-800/25 px-1.5 py-0.2 rounded font-bold">+${formatNumber(pkg.size)}</span>
+            </div>
+
+            <!-- Price tags -->
+            <div class="text-[10px] text-slate-400 mb-2 leading-relaxed">
+              Buy: <span class="text-emerald-400 font-semibold">৳ ${pkg.buy}</span> | Sell: <span class="text-yellow-400 font-semibold">৳ ${pkg.sell}</span>
+            </div>
+          </div>
+
+          <!-- Buttons Panel -->
+          <div class="mt-2 pt-2 border-t border-slate-800 flex flex-col gap-1.5">
+            <span class="text-[8px] text-slate-500 font-medium">কেনা: <span class="text-slate-400 font-mono font-bold">${formatNumber(state.globalBuys[pkg.id] || 0)}</span> বার | বিক্রি: <span class="text-slate-400 font-mono font-bold">${formatNumber(state.globalSells[pkg.id] || 0)}</span></span>
+            
+            <div class="grid grid-cols-2 gap-1">
+              <button onclick="executeBuyMarket('${pkg.id}')" class="py-1 bg-slate-800 hover:bg-slate-750 text-white border border-slate-700 text-[9px] rounded font-bold active:scale-[0.96] flex items-center justify-center gap-0.5 cursor-pointer">
+                <span class="material-symbols-rounded text-[10px]">shopping_cart</span>
+                কিনুন
+              </button>
+              <button onclick="executeSellMarket('${pkg.id}')" class="py-1 bg-slate-800 hover:bg-slate-750 text-white border border-slate-700 text-[9px] rounded font-bold active:scale-[0.96] flex items-center justify-center gap-0.5 cursor-pointer">
+                <span class="material-symbols-rounded text-[10px]">sell</span>
+                বিক্রি
+              </button>
+            </div>
+          </div>
+        `;
+        parent.appendChild(itemCard);
+      });
+    }
+
+    // Execute package Buying logic
+    function executeBuyMarket(pkgId) {
+      const pkg = MARKET_PACKAGES.find(p => p.id === pkgId);
+      if (!pkg) return;
+
+      if (state.bdtClaimed < pkg.buy) {
+        showToast(`ক্রয় ব্যর্থ! আপনার উইথড্র ফান্ডে পর্যাপ্ত ব্যালেন্স নেই। প্রয়োজনীয়: ৳ ${pkg.buy}`, "danger");
+        return;
+      }
+
+      // Claim currently ticking idle so countdown state is safe
+      state.bdtClaimed -= pkg.buy;
+      state.diamonds += pkg.size;
+      state.globalBuys[pkgId] = (state.globalBuys[pkgId] || 0) + 1;
+
+      saveToStorage();
+      updateDashboardData();
+      renderMarketplace();
+      showToast(`সফলভাবে ${pkg.title} কেনা হয়েছে! আপনার 💎 এবং মাইনিং গতি বৃদ্ধি পেয়েছে।`, "success");
+    }
+
+    // Execute package Selling logic
+    function executeSellMarket(pkgId) {
+      const pkg = MARKET_PACKAGES.find(p => p.id === pkgId);
+      if (!pkg) return;
+
+      if (state.diamonds < pkg.size) {
+        showToast(`বিক্রি ব্যর্থ! আপনার অ্যাকাউন্টে পর্যাপ্ত ডায়মন্ড নেই। প্রয়োজনীয়: ${formatNumber(pkg.size)} 💎`, "danger");
+        return;
+      }
+
+      state.diamonds -= pkg.size;
+      state.bdtClaimed += pkg.sell;
+      state.globalSells[pkgId] = (state.globalSells[pkgId] || 0) + 1;
+
+      saveToStorage();
+      updateDashboardData();
+      renderMarketplace();
+      showToast(`সফলভাবে ${pkg.title} বিক্রি করে আপনার উইথড্র ফান্ডে ৳ ${pkg.sell} যোগ করা হয়েছে!`, "success");
+    }
+
+    // Ad watch processing & timer triggers
+    function startWatchingAd() {
+      // Out of bounds checker
+      if (state.adsWatchedToday >= 100) {
+        showToast("আজকের আডের সর্বোচ্চ সীমা (১০০ টি) অতিক্রম করেছেন! আগামীকাল আবার চেষ্টা করুন।", "danger");
+        return;
+      }
+
+      // Cooldown timer state checker
+      const nextAllowedTime = state.lastAdWatchTime + 60000;
+      if (Date.now() < nextAllowedTime) {
+        const remainingSec = Math.ceil((nextAllowedTime - Date.now()) / 1000);
+        showToast(`অনুগ্রহ করে পরবর্তী বিজ্ঞাপনের জন্য ${remainingSec} সেকেন্ড অপেক্ষা করুন!`, "danger");
+        return;
+      }
+
+      // Close other modals prior to simulated screen overlays
+      closeInfoModal();
+      closeWithdrawModal();
+
+      // Launch full overlay timer screen
+      const timerModal = document.getElementById('ad-viewer-modal');
+      timerModal.classList.remove('hidden');
+
+      const totalTimeMs = 15000;
+      let elapsedMs = 0;
+      const stepMs = 100;
+      const timerBar = document.getElementById('ad-timer-bar');
+      const timerText = document.getElementById('ad-timer-number');
+
+      const adProgressInterval = setInterval(() => {
+        elapsedMs += stepMs;
+        const percent = (elapsedMs / totalTimeMs) * 100;
+        timerBar.style.width = `${percent}%`;
+        
+        const remainingSeconds = Math.ceil((totalTimeMs - elapsedMs) / 1000);
+        timerText.textContent = `${remainingSeconds} সেকেন্ড বাকি`;
+
+        if (elapsedMs >= totalTimeMs) {
+          clearInterval(adProgressInterval);
+          completeAdWatch();
+        }
+      }, stepMs);
+    }
+
+    // Trigger ad rewarding logic
+    function completeAdWatch() {
+      // Hide simulation screen view modal
+      document.getElementById('ad-viewer-modal').classList.add('hidden');
+
+      const rewardDiamonds = 100;
+      state.diamonds += rewardDiamonds;
+      state.adsWatchedToday += 1;
+      state.adsWatchedTotal += 1;
+      state.lastAdWatchTime = Date.now();
+
+      // Bonus increments on multiple of 10s
+      let gotBonus = false;
+      state.bonusCycleProgress += 1;
+      if (state.bonusCycleProgress >= 10) {
+        state.bonusCycleProgress = 0;
+        state.bdtClaimed += 1.0; // 1 BDT bonus reward direct to withdraw fund
+        gotBonus = true;
+      }
+
+      saveToStorage();
+      updateDashboardData();
+      renderMarketplace();
+
+      // Display double reward feedback
+      if (gotBonus) {
+        showToast(`🎉 অভিনন্দিত! সফলভাবে অ্যাড দেখার পর ১০০ 💎 এবং বিশেষ মাইলফলক ১ ৳ বোনাস সরাসরি উইথড্র ফান্ডে যোগ হয়েছে!`, "success");
+      } else {
+        showToast(`সাফল্যজনক রিওয়ার্ড! আপনি ১০০ 💎 অর্জন করেছেন।`, "success");
+      }
+
+      // Initialize sixty seconds cooldown timers on watch button
+      startCooldownCountdown(60);
+    }
+
+    // Sets up button countdowns overlay
+    function startCooldownCountdown(seconds) {
+      const overlay = document.getElementById('ad-cooldown-overlay');
+      const timerDisplay = document.getElementById('cooldown-timer');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+
+      let remaining = seconds;
+      timerDisplay.textContent = `${remaining}s`;
+
+      if (adCooldownInterval) clearInterval(adCooldownInterval);
+
+      adCooldownInterval = setInterval(() => {
+        remaining -= 1;
+        timerDisplay.textContent = `${remaining}s`;
+        document.getElementById('cooldown-text').textContent = `পরবর্তী অ্যাড দেখতে পারবেন: ${remaining} সেকেন্ড`;
+
+        if (remaining <= 0) {
+          clearInterval(adCooldownInterval);
+          overlay.classList.remove('flex');
+          overlay.classList.add('hidden');
+        }
+      }, 1000);
+    }
+
+    // Helper checks if page reloaded during countdown and handles gracefully
+    function checkAndRestoreCooldown() {
+      const nextAllowedTime = state.lastAdWatchTime + 60000;
+      if (Date.now() < nextAllowedTime) {
+        const remaining = Math.ceil((nextAllowedTime - Date.now()) / 1000);
+        startCooldownCountdown(remaining);
+      }
+    }
+
+    // Simulation tool for testing refer count in production
+    function simulateReferralInvite() {
+      state.referrals += 1;
+      saveToStorage();
+      updateDashboardData();
+      showToast(`আপনার মিনি অ্যাপে ১ জন সফল রেফারেল যুক্ত করা হয়েছে (সর্বমোট: ${state.referrals} জন)`, "success");
+    }
+
+    function resetReferrals() {
+      state.referrals = 0;
+      saveToStorage();
+      updateDashboardData();
+      showToast("রেফারেল কাউন্ট রিসেট করা হয়েছে!", "info");
+    }
+
+    // Modal controller actions
+    function openInfoModal() {
+      document.getElementById('info-modal').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('info-modal-content').classList.remove('scale-95');
+      }, 50);
+      calculateSimulatorResult(document.getElementById('calc-diamond-input').value);
+    }
+
+    function closeInfoModal() {
+      document.getElementById('info-modal-content').classList.add('scale-95');
+      setTimeout(() => {
+        document.getElementById('info-modal').classList.add('hidden');
+      }, 150);
+    }
+
+    // Modal withdrawals views toggle
+    function openWithdrawModal() {
+      // Pre-check referrals validity as per exact terms
+      if (state.referrals < 5) {
+        alert("উইথড্র রিকোয়েস্ট করতে হলে ন্যূনতম ৫ জন বন্ধুকে রেফার করতে হবে! ডেমো প্যানেলে বাড়িয়ে পরীক্ষা করুন।");
+        showToast("উইথড্র ব্লকড! অতিরিক্ত ৫ জন রেফার আবশ্যক।", "danger");
+        return;
+      }
+
+      document.getElementById('modal-withdraw-balance-display').textContent = "৳ " + state.bdtClaimed.toFixed(2);
+      document.getElementById('withdraw-modal').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('withdraw-modal-content').classList.remove('scale-95');
+      }, 50);
+
+      // Default first payment action active
+      const defaults = document.querySelector('.payment-method-btn');
+      if (defaults) selectWithdrawMethod('bkash', defaults);
+    }
+
+    function closeWithdrawModal() {
+      document.getElementById('withdraw-modal-content').classList.add('scale-95');
+      setTimeout(() => {
+        document.getElementById('withdraw-modal').classList.add('hidden');
+      }, 150);
+    }
+
+    // Method selection toggler
+    function selectWithdrawMethod(method, element) {
+      selectedWithdrawMethod = method;
+      document.querySelectorAll('.payment-method-btn').forEach(btn => {
+        btn.classList.remove('border-pink-500', 'border-orange-500', 'border-purple-500');
+        btn.classList.add('border-transparent');
+      });
+
+      if (method === 'bkash') element.classList.add('border-pink-500');
+      else if (method === 'nagad') element.classList.add('border-orange-500');
+      else if (method === 'rocket') element.classList.add('border-purple-500');
+    }
+
+    // Fill maximum balance
+    function fillMaxWithdraw() {
+      document.getElementById('withdraw-amount-input').value = Math.floor(state.bdtClaimed * 100) / 100;
+    }
+
+    // Withdraw form validation submit
+    function submitWithdrawForm() {
+      const phoneInput = document.getElementById('withdraw-phone-input').value.trim();
+      const amountInput = parseFloat(document.getElementById('withdraw-amount-input').value);
+
+      if (!selectedWithdrawMethod) {
+        showToast("অনুগ্রহ করে একটি টাকা তোলার মাধ্যম সিলেক্ট করুন!", "danger");
+        return;
+      }
+
+      if (phoneInput.length < 10) {
+        showToast("সঠিক মোবাইল পেমেন্ট অ্যাকাউন্ট নাম্বারটি প্রবেশ করান!", "danger");
+        return;
+      }
+
+      if (isNaN(amountInput) || amountInput <= 0) {
+        showToast("টাকা উত্তোলনের পরিমাণ সঠিকভাবে প্রবেশ করান!", "danger");
+        return;
+      }
+
+      if (amountInput < 50) {
+        showToast("উইথড্র ব্যর্থ! সর্বনিম্ন উইথড্র পরিমাণ ৫০ ৳ হতে হবে।", "danger");
+        return;
+      }
+
+      if (amountInput > state.bdtClaimed) {
+        showToast("উইথড্র ব্যর্থ! আপনার উইথড্র ফান্ডে পর্যাপ্ত ব্যালেন্স নেই।", "danger");
+        return;
+      }
+
+      // Success withdrawal simulation processing
+      state.bdtClaimed -= amountInput;
+      saveToStorage();
+      updateDashboardData();
+      closeWithdrawModal();
+
+      // Show professional success alert representing Telegram UI interaction
+      alert(`🎉 টাকা উত্তোলন সফল হয়েছে!\n\n` +
+            `পেমেন্ট মাধ্যম: ${selectedWithdrawMethod.toUpperCase()}\n` +
+            `একাউন্ট নাম্বার: +৮৮ ${phoneInput}\n` +
+            `মোট অ্যামাউন্ট: ৳ ${amountInput.toFixed(2)}\n\n` +
+            `পরবর্তী ২ ঘন্টার মধ্যে টাকা আপনার অল্টারনেটিভ মোড নাম্বারে প্রেরণ করা হবে।`);
+            
+      showToast("আপনার উইথড্র রিকোয়েস্টটি এডমিনের কাছে পাঠানো হয়েছে!", "success");
+    }
+
+    // Calculator values processing in popping screen
+    function calculateSimulatorResult(diamondsVal) {
+      const diamondsCount = parseFloat(diamondsVal) || 0;
+      
+      // Calculate earnings using core logic rules
+      // 1000 diamonds = 0.00000001 BDT / Hour
+      // Value rate: (diamondsCount / 1000) * 0.00000001 BDT per hour
+      const hourlyEarnings = (diamondsCount / 1000) * 0.00000001;
+      const dailyEarnings = hourlyEarnings * 24;
+      const monthlyEarnings = dailyEarnings * 30;
+
+      // Inject to elements safely with extended decimal representation to visually excite users
+      document.getElementById('calc-hourly-res').textContent = "৳ " + hourlyEarnings.toFixed(8);
+      document.getElementById('calc-daily-res').textContent = "৳ " + dailyEarnings.toFixed(8);
+      document.getElementById('calc-monthly-res').textContent = "৳ " + monthlyEarnings.toFixed(6);
+    }
+
+    // Toast feedback notification system
+    function showToast(text, type = "info") {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = "flex items-center gap-2 p-3.5 rounded-xl border transition-all duration-300 transform translate-y-2 opacity-0 shadow-lg pointer-events-auto bg-[#131924]/95 backdrop-blur";
+      
+      let iconColor = "text-[#3b82f6]";
+      let borderColor = "border-[#1e293b]";
+      let iconName = "info";
+
+      if (type === "success") {
+        iconColor = "text-emerald-400";
+        borderColor = "border-[#10b981]/20";
+        iconName = "check_circle";
+      } else if (type === "danger") {
+        iconColor = "text-brand-danger";
+        borderColor = "border-[#ef4444]/20";
+        iconName = "error_outline";
+      }
+
+      toast.style.borderColor = borderColor;
+      toast.innerHTML = `
+        <span class="material-symbols-rounded ${iconColor} text-[18px] flex-shrink-0">${iconName}</span>
+        <span class="text-xs text-slate-200 font-semibold leading-relaxed">${text}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Animation layout entries
+      setTimeout(() => {
+        toast.className = toast.className.replace('translate-y-2 opacity-0', 'translate-y-0 opacity-100');
+      }, 50);
+
+      // Autohide timings
+      setTimeout(() => {
+        toast.className = toast.className.replace('translate-y-0 opacity-100', 'translate-y-[-10px] opacity-0');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

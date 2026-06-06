@@ -1,0 +1,6 @@
+{
+  "name": "Diamond Earn",
+  "description": "Premium Diamond Earn Mini App simulator with real-time idle BDT conversions, simulated AD network and market trading features.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
